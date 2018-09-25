@@ -53,6 +53,8 @@ jobs:
           command: |
             mkdir ~/.ssh
             ssh-keyscan github.com >> ~/.ssh/known_hosts
+            git config --global user.email "circleci@transferwise.com"
+            git config --global user.name "CircleCI"
             npm run release-to-github
       - run:
           name: Publish on npm
