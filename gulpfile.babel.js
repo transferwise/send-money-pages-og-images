@@ -1,76 +1,84 @@
+import del from 'del';
 import fs from 'fs';
-import mkdirp from 'mkdirp';
-import { promisify } from 'util';
+import makeDir from 'make-dir';
 import gulp from 'gulp';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import raster from 'gulp-raster';
-import rename from 'gulp-rename';
 import App from './src/App';
-import { COUNTRIES } from './src/countries';
-import { LOCALES } from './src/locales';
+import COUNTRIES from './src/countries';
 const gulpLoadPlugins = require('gulp-load-plugins');
 const plugins = gulpLoadPlugins();
 const imageminPngquant = require('imagemin-pngquant');
-const runSequence = require('run-sequence').use(gulp);
+import Polyglot from 'node-polyglot';
+import jsonConcat from 'gulp-json-concat';
 
-gulp.task('imagemin', () => {
-  return gulp.src('./dist/png/**/*.png')
-    .pipe(
-      plugins.cache(
-        plugins.imagemin([
-          imageminPngquant({ quality: '65-80' }),
-        ]),
-      ),
-    )
+function clean() {
+  return del(['.tmp', 'dist']);
+}
+
+const imagemin = () => {
+  return gulp
+    .src('./dist/png/**/*.png')
+    .pipe(plugins.cache(plugins.imagemin([imageminPngquant({ quality: '65-80' })])))
     .pipe(gulp.dest('./dist/png'));
+};
+
+const svg2png = () => {
+  return gulp
+    .src('./dist/svg/**/*.svg')
+    .pipe(plugins.raster({ format: 'png', scale: 2 }))
+    .pipe(plugins.rename({ extname: '.png' }))
+    .pipe(gulp.dest('./dist/png'));
+};
+
+const asyncForEach = async (array, callback) => {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
   }
-);
+};
 
-gulp.task('svg2png', () => {
-  return gulp.src('./dist/svg/**/*.svg')
-    .pipe(raster({format: 'png', scale: 2}))
-    .pipe(rename({extname: '.png'}))
-    .pipe(gulp.dest('./dist/png'));
-});
-
-gulp.task('svg', () => {
-  const writeFileSync = promisify(fs.writeFileSync);
-
+gulp.task('svg', async () => {
   const mkdirAndWriteFile = async (path, fileName, content) => {
-    await mkdirp(path);
-    await writeFileSync(`${path}${fileName}`, content);
-  }
-
-  const build = (locale, country) => {
-    const { translationKey } = country;
-    const sendMoneyAbroad = `SEND MONEY TO ${translationKey.toUpperCase()}`;
-
-    const svg = ReactDOMServer.renderToStaticMarkup(<App width={620} height={325} sendMoneyAbroad={sendMoneyAbroad} />);
-
-    mkdirAndWriteFile(`./dist/svg/${locale}/`, `${translationKey}.svg`, svg);
+    await makeDir(path);
+    await fs.writeFileSync(`${path}${fileName}`, content);
   };
 
-  LOCALES.forEach(locale => {
-    COUNTRIES.forEach(country => {
-      build(locale, country);
+  const build = async (locale, country, messages) => {
+    const { translationKey } = country;
+    const polyglot = new Polyglot({
+      locale,
+      phrases: messages[locale],
+    });
+    const translate = polyglot.t.bind(polyglot);
+
+    const svg = ReactDOMServer.renderToStaticMarkup(
+      <App width={620} height={325} translationKey={translationKey} translate={translate} />,
+    );
+
+    await mkdirAndWriteFile(`./dist/svg/${locale}/`, `${translationKey}.svg`, svg);
+  };
+
+  const messages = await JSON.parse(fs.readFileSync('.tmp/translations/messages.json', 'utf8'));
+
+  await asyncForEach(Object.keys(messages), async locale => {
+    await asyncForEach(COUNTRIES, async country => {
+      await build(locale, country, messages);
     });
   });
 });
 
-gulp.task('build', done => {
-  runSequence(
-    'svg',
-    'svg2png',
-    'imagemin',
-    done,
-  );
-});
+const translations = () => {
+  return gulp
+    .src('./translations/*.json')
+    .pipe(
+      jsonConcat('messages.json', function(data) {
+        return new Buffer(JSON.stringify(data));
+      }),
+    )
+    .pipe(gulp.dest('.tmp/translations/'));
+};
 
-gulp.task(
-  'default',
-  () =>
-    new Promise(resolve => {
-      runSequence('build', resolve);
-    }),
-);
+const build = gulp.series(clean, gulp.series(translations, 'svg', svg2png, imagemin));
+
+gulp.task('build', build);
+gulp.task('default', build);
