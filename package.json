@@ -1,6 +1,6 @@
 {
-  "name": "send-money-og-images",
-  "version": "0.0.1",
+  "name": "@transferwise/send-money-pages-og-images",
+  "version": "0.0.2",
   "description": "",
   "main": "index.js",
   "files": [
@@ -13,11 +13,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/transferwise/send-money-og-images.git"
+    "url": "git+https://github.com/transferwise/send-money-pages-og-images.git"
   },
   "author": "Carlos Matallín",
   "license": "ISC",
-  "homepage": "https://github.com/transferwise/send-money-og-images#readme",
+  "homepage": "https://github.com/transferwise/send-money-pages-og-images#readme",
   "dependencies": {
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
