@@ -181,5 +181,6 @@
   "country.to-french-polynesia": "to French Polynesia",
   "country.to-new-caledonia": "to New Caledonia",
   "country.to-wallis-and-futuna": "to Wallis and Futuna",
-  "line1": "Send money %{country}"
+  "line1": "Send money %{country}",
+  "line2": "with TransferWise"
 }

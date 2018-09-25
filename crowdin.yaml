@@ -4,4 +4,5 @@ base_path: .
 preserve_hierarchy: false
 files:
   - source: /translations/en.json
-    translation: /translations/%locale%.%file_extension%
+    translation: /translations/%two_letters_code%.%file_extension%
+    update_option: 'update_as_unapproved'
