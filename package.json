@@ -1,6 +1,6 @@
 {
   "name": "@transferwise/send-money-pages-og-images",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "index.js",
   "files": [
@@ -8,8 +8,10 @@
   ],
   "scripts": {
     "precommit": "pretty-quick --staged",
-    "lint": "eslint src/**/*.js",
-    "build": "NODE_ENV=production gulp"
+    "lint": "eslint gulpfile.babel.js src/**/*.js",
+    "build": "NODE_ENV=production gulp",
+    "check-release-to-github": "release-to-github-with-changelog-pre-release-checks",
+    "release-to-github": "release-to-github-with-changelog"
   },
   "repository": {
     "type": "git",
