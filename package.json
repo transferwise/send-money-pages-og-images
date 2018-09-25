@@ -7,7 +7,6 @@
     "dist/png/"
   ],
   "scripts": {
-    "precommit": "pretty-quick --staged",
     "lint": "eslint gulpfile.babel.js src/**/*.js",
     "build": "NODE_ENV=production gulp",
     "check-release-to-github": "release-to-github-with-changelog-pre-release-checks",
