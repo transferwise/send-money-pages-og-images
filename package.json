@@ -19,7 +19,7 @@
   "author": "Carlos Matallín",
   "license": "ISC",
   "homepage": "https://github.com/transferwise/send-money-pages-og-images#readme",
-  "dependencies": {
+  "devDependencies": {
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
     "@babel/plugin-transform-react-jsx": "^7.0.0",
