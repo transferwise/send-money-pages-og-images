@@ -12,9 +12,7 @@ const imageminPngquant = require('imagemin-pngquant');
 import Polyglot from 'node-polyglot';
 import jsonConcat from 'gulp-json-concat';
 
-function clean() {
-  return del(['.tmp', 'dist']);
-}
+const clean = () => del(['.tmp', 'dist']);
 
 const imagemin = () => {
   return gulp
@@ -78,7 +76,7 @@ const translations = () => {
     .pipe(gulp.dest('.tmp/translations/'));
 };
 
-const build = gulp.series(clean, gulp.series(translations, 'svg', svg2png, imagemin));
+const build = gulp.series(clean, translations, 'svg', svg2png, imagemin);
 
 gulp.task('build', build);
 gulp.task('default', build);
