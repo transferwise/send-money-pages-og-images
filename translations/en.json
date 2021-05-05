@@ -132,7 +132,6 @@
   "country.to-botswana": "to Botswana",
   "country.to-belarus": "to Belarus",
   "country.to-belize": "to Belize",
-  "country.to-costa-rica": "to Costa Rica",
   "country.to-dominican-republic": "to Dominican Republic",
   "country.to-algeria": "to Algeria",
   "country.to-fiji": "to Fiji",
@@ -182,5 +181,5 @@
   "country.to-new-caledonia": "to New Caledonia",
   "country.to-wallis-and-futuna": "to Wallis and Futuna",
   "line1": "Send money %{country}",
-  "line2": "with TransferWise"
+  "line2": "with Wise"
 }
