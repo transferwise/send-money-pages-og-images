@@ -9,7 +9,7 @@ export default class App extends React.Component {
     const textToSVG = TextToSVG.loadSync('./fonts/TW-Averta-Bold.otf');
     const country = translate(`country.to-${translationKey}`);
     const sendMoneyTo = translate('line1', { country });
-    const withTransferWise = translate('line2');
+    const withWise = translate('line2');
 
     const line1 = textToSVG.getPath(sendMoneyTo.toUpperCase(), {
       x: width / 2,
@@ -18,7 +18,7 @@ export default class App extends React.Component {
       anchor: 'center bottom',
       attributes: attributes,
     });
-    const line2 = textToSVG.getPath(withTransferWise.toUpperCase(), {
+    const line2 = textToSVG.getPath(withWise.toUpperCase(), {
       x: width / 2,
       y: height / 2 + 20,
       fontSize: 40,
